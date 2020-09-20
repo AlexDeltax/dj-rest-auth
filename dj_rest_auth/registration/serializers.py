@@ -186,8 +186,14 @@ class RegisterSerializer(serializers.Serializer):
         email = get_adapter().clean_email(email)
         if allauth_settings.UNIQUE_EMAIL:
             if email and email_address_exists(email):
-                raise serializers.ValidationError(
-                    _("A user is already registered with this e-mail address."))
+                user = get_user_model().objects.get(email=email)
+                email_address = user.emailaddress_set.get(email=user.email)
+                if email_address.verified:
+                    raise serializers.ValidationError(
+                        _("A user is already registered with this e-mail address.")
+                    )
+                else:
+                    user.delete()
         return email
 
     def validate_password1(self, password):

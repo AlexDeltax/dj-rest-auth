@@ -45,7 +45,7 @@ class RegisterView(CreateAPIView):
     def get_response_data(self, user):
         if allauth_settings.EMAIL_VERIFICATION == \
                 allauth_settings.EmailVerificationMethod.MANDATORY:
-            return {"detail": _("Verification e-mail sent.")}
+            return {"message": _("Verification e-mail sent."), "status": "ok"}
 
         if getattr(settings, 'REST_USE_JWT', False):
             data = {
@@ -98,7 +98,7 @@ class VerifyEmailView(APIView, ConfirmEmailView):
         self.kwargs['key'] = serializer.validated_data['key']
         confirmation = self.get_object()
         confirmation.confirm(self.request)
-        return Response({'detail': _('ok')}, status=status.HTTP_200_OK)
+        return Response({"message": _("Email verified"), "status":"ok"}, status=status.HTTP_200_OK)
 
 
 class SocialLoginView(LoginView):

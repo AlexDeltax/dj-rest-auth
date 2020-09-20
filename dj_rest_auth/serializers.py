@@ -216,10 +216,10 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
             uid = force_text(uid_decoder(attrs['uid']))
             self.user = UserModel._default_manager.get(pk=uid)
         except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
-            raise ValidationError({'uid': ['Invalid value']})
+            raise ValidationError({'message': _('Invalid uid value')}, code='invalid_uid')
 
         if not default_token_generator.check_token(self.user, attrs['token']):
-            raise ValidationError({'token': ['Invalid value']})
+            raise ValidationError({'message': _('Invalid token value')}, code='invalid_token')
 
         self.custom_validation(attrs)
         # Construct SetPasswordForm instance

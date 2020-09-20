@@ -142,7 +142,7 @@ class LogoutView(APIView):
         if getattr(settings, 'REST_SESSION_LOGIN', True):
             django_logout(request)
 
-        response = Response({"detail": _("Successfully logged out.")},
+        response = Response({"message": _("Successfully logged out."), "status": "ok"},
                             status=status.HTTP_200_OK)
 
         if getattr(settings, 'REST_USE_JWT', False):
@@ -233,7 +233,7 @@ class PasswordResetView(GenericAPIView):
         serializer.save()
         # Return the success message with OK HTTP status
         return Response(
-            {"detail": _("Password reset e-mail has been sent.")},
+            {"message": _("Password reset e-mail has been sent."), "status": "ok"},
             status=status.HTTP_200_OK
         )
 
@@ -260,7 +260,7 @@ class PasswordResetConfirmView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
-            {"detail": _("Password has been reset with the new password.")}
+            {"message": _("Password has been reset with the new password."), "status": "ok"}
         )
 
 
@@ -283,4 +283,4 @@ class PasswordChangeView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response({"detail": _("New password has been saved.")})
+        return Response({"message": _("New password has been saved."), "status": "ok"})
