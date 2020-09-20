@@ -82,8 +82,11 @@ class LoginView(GenericAPIView):
         else:
             serializer = serializer_class(instance=self.token,
                                           context=self.get_serializer_context())
+        output = serializer.data
+        output['user_id'] = self.user.id
 
-        response = Response(serializer.data, status=status.HTTP_200_OK)
+        response = Response(output, status=status.HTTP_200_OK)
+
         if getattr(settings, 'REST_USE_JWT', False):
             cookie_name = getattr(settings, 'JWT_AUTH_COOKIE', None)
             cookie_secure = getattr(settings, 'JWT_AUTH_SECURE', False)
